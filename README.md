@@ -37,7 +37,7 @@
 dependencies:
   thingboot_device:
     git:
-      url: https://github.com/ThingBoot/thingboot-device-flutter.git
+      url: https://github.com/ThingBoot/thingboot-device-flutter-sdk.git
 ```
 
 ### 方式二：pub 依赖

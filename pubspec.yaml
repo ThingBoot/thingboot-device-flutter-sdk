@@ -1,8 +1,8 @@
 name: thingboot_device
 description: 芯步设备 SDK Flutter 移植版（ThingBoot Device SDK for Flutter），与 ESP Arduino 版接口高度一致。
 version: 0.1.0
-repository: https://github.com/ThingBoot/thingboot-device-flutter
-issue_tracker: https://github.com/ThingBoot/thingboot-device-flutter/issues
+repository: https://github.com/ThingBoot/thingboot-device-flutter-sdk
+issue_tracker: https://github.com/ThingBoot/thingboot-device-flutter-sdk/issues
 
 environment:
   sdk: ^3.0.0
