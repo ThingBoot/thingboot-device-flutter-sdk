@@ -807,9 +807,9 @@ class ThingBootDevice {
         publish(SysTopic.order, '', mid: mid);
         break;
       case 'state':
-        // 对应 core.h：Arduino 原文使用单引号，保持一致
+        // 对应 core.h 的 state 应答；使用标准 JSON（Arduino 原文为单引号伪 JSON，已弃用）
         publish(SysTopic.order,
-            "{'state':${jsonEncode(deviceStates())}}",
+            jsonEncode({'state': deviceStates()}),
             mid: mid);
         break;
       case 'ble_start':
