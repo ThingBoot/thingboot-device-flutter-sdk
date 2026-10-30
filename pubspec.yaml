@@ -1,6 +1,6 @@
 name: thingboot_device
-description: 芯步设备 SDK Flutter 版（ThingBoot Device SDK for Flutter），以 ESP-IDF 为基准并包含闭源原生协议核心。
-version: 0.2.0
+description: 芯步设备 Flutter SDK，通过统一 Dart API 将应用接入芯步平台，支持设备激活、MQTT 通信、配置管理、事件上报与私有化接入。
+version: 0.2.1
 repository: https://github.com/ThingBoot/thingboot-device-flutter-sdk
 issue_tracker: https://github.com/ThingBoot/thingboot-device-flutter-sdk/issues
 
