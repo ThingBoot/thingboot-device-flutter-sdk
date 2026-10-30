@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0（2026-10-30）
+
+- macOS 构建自动集成 universal 原生组件，支持 Apple Silicon 和 Intel Mac。
+- 无需手动修改 Xcode 工程，现有 Dart API、配置存储和网络行为保持不变。
+- 原生组件仅导出稳定的接入接口，发布包不包含核心源码。
+
 ## 0.3.0（2026-10-30）
 
 - Android 构建自动集成原生组件，支持 arm64-v8a、armeabi-v7a、x86 和 x86_64。

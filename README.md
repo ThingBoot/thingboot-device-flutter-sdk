@@ -24,7 +24,7 @@
 
 支持 Windows、Android、iOS、macOS 和 Linux，不支持 Web。
 
-Windows x64 和 Android 会随应用构建自动集成原生组件，无需手动修改 CMake、复制静态库或调整现有 Dart 代码。Android 支持 arm64-v8a、armeabi-v7a、x86 和 x86_64，原生组件兼容 16 KB 页大小。其他平台使用标准 Flutter 依赖流程。
+Windows x64、Android 和 macOS 会随应用构建自动集成原生组件，无需手动修改构建工程或现有 Dart 代码。Android 支持 arm64-v8a、armeabi-v7a、x86 和 x86_64，原生组件兼容 16 KB 页大小。macOS 提供 universal 原生库，支持 Apple Silicon 和 Intel Mac。其他平台使用标准 Flutter 依赖流程。
 
 ## 安装
 
@@ -41,7 +41,7 @@ dependencies:
 
 ```yaml
 dependencies:
-  thingboot_device: ^0.3.0
+  thingboot_device: ^0.4.0
 ```
 
 安装或升级后执行：

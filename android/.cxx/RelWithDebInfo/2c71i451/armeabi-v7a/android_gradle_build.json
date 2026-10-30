@@ -1,0 +1,38 @@
+{
+  "buildFiles": [
+    "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "E:\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\.cxx\\RelWithDebInfo\\2c71i451\\armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "E:\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\.cxx\\RelWithDebInfo\\2c71i451\\armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "thingboot_device::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "thingboot_device",
+      "output": "E:\\iot\\product\\SuperScreen\\build\\thingboot_device\\intermediates\\cxx\\RelWithDebInfo\\2c71i451\\obj\\armeabi-v7a\\libthingboot_device.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "E:\\Android\\Sdk\\ndk\\28.2.13676358\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe",
+      "cppCompilerExecutable": "E:\\Android\\Sdk\\ndk\\28.2.13676358\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

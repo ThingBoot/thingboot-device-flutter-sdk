@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "E:\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\.cxx\\Debug\\6b4i4v1a\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "E:\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\.cxx\\Debug\\6b4i4v1a\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "thingboot_device::@6890427a1f51a3e7e1df": {
+      "artifactName": "thingboot_device",
+      "abi": "x86",
+      "output": "E:\\iot\\product\\SuperScreen\\build\\thingboot_device\\intermediates\\cxx\\Debug\\6b4i4v1a\\obj\\x86\\libthingboot_device.so",
+      "runtimeFiles": []
+    }
+  }
+}

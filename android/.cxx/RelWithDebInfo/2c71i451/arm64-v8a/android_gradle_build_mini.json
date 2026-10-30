@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "E:\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\.cxx\\RelWithDebInfo\\2c71i451\\arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "E:\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\.cxx\\RelWithDebInfo\\2c71i451\\arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "thingboot_device::@6890427a1f51a3e7e1df": {
+      "artifactName": "thingboot_device",
+      "abi": "arm64-v8a",
+      "output": "E:\\iot\\product\\SuperScreen\\build\\thingboot_device\\intermediates\\cxx\\RelWithDebInfo\\2c71i451\\obj\\arm64-v8a\\libthingboot_device.so",
+      "runtimeFiles": []
+    }
+  }
+}

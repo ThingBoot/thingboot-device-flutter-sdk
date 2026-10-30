@@ -1,0 +1,1 @@
+E:\iot\product\SuperScreen\build\thingboot_device\intermediates\cxx\RelWithDebInfo\2c71i451\obj\x86_64
