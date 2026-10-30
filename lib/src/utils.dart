@@ -1,5 +1,4 @@
-/// 字符串与哈希工具，对应 Arduino 版 ThingBootSDK/Utils.h 与 common/utils.h，
-/// 以 Dart 风格重新组织。
+/// 字符串与哈希工具，以 IDF ThingBootSDK/Utils.h 与 common/utils.h 为基准。
 library;
 
 import 'dart:convert';
@@ -7,11 +6,11 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart' as crypto;
 
-/// MD5 哈希并居中截取，对应 ThingBootSDK/Utils.h 的 `md5(data, len)`。
-///
-/// [len] 默认 32（完整 MD5 hex）；`md5(data, 8)` 即从第 12 位起截 8 位，
-/// 与 Arduino 版 mid 生成规则一致。
+import 'native_core.dart';
+
+/// MD5 哈希并居中截取，对应 IDF ThingBootSDK/Utils.h 的 `md5(data, len)`。
 String tbMd5(String data, [int len = 32]) {
+  if (TbNativeCore.isSupported) return TbNativeCore.instance.md5(data, len);
   final hex = crypto.md5.convert(utf8.encode(data)).toString();
   final begin = (32 - len) ~/ 2;
   return hex.substring(begin, begin + len);
@@ -90,19 +89,64 @@ List<String> strSplit(String str, String sep, int maxCount) {
   return out;
 }
 
-/// 从 URL 参数中提取指定参数值，对应 common/utils.h 的 `get_param()`。
+/// 从 URL 参数中提取指定参数值。
+///
+/// 语义与 Arduino common/utils.h 的 `get_param()` 一致（整名匹配，避免
+/// `sign` 误中 `mysign=`）。
+///
+/// 注意：IDF/Arduino SDK 同函数有差一缺陷（`start += key.length() - 1`），
+/// 返回值会**多带一个 `=` 前缀**（如 `=gateway`）——前缀 `&` 与搜索串里
+/// 的 `&` 抵消后，值起始 = 命中位置 + key.length()。本实现取正确值；
+/// 与 IDF 侧修复方案（`+= key.length()`）等价。
 String getParam(String params, String param) {
   final key = '$param=';
-  var start = '&$params'.indexOf('&$key');
+  final p = '&$params';
+  final start = p.indexOf('&$key');
   if (start < 0) return '';
-  start += key.length - 1; // 转回原始 params 中的位置
-  final end = params.indexOf('&', start);
-  return end < 0 ? params.substring(start) : params.substring(start, end);
+  // 值起始 = 命中位 + '&' 长度 + key 长度
+  final valueStart = start + 1 + key.length;
+  final end = p.indexOf('&', valueStart);
+  return end < 0 ? p.substring(valueStart) : p.substring(valueStart, end);
 }
 
 /// 判断 URL 参数中是否包含指定参数，对应 common/utils.h 的 `has_param()`。
-bool hasParam(String params, String param) =>
-    '&$params'.contains('&$param=');
+bool hasParam(String params, String param) => '&$params'.contains('&$param=');
+
+/// URL 编码（percent-encode 非 unreserved 字符，RFC 3986），
+/// 对应 ThingBootSDK/Utils.h 的 `url_encode()`。
+///
+/// 按 UTF-8 字节编码：非 ASCII 字符逐字节转 `%XX`（与 C 版逐字节语义一致）。
+String urlEncode(String s) {
+  if (TbNativeCore.isSupported) return TbNativeCore.instance.urlEncode(s);
+  const unreserved =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+  final b = StringBuffer();
+  for (final byte in utf8.encode(s)) {
+    final ch = String.fromCharCode(byte);
+    if (unreserved.contains(ch)) {
+      b.write(ch);
+    } else {
+      b.write('%${byte.toRadixString(16).padLeft(2, '0').toUpperCase()}');
+    }
+  }
+  return b.toString();
+}
+
+/// 构造 URL（键值对自动 URL 编码），对应 ThingBootSDK/Utils.h 的 `url_build()`。
+///
+/// [base] 为路径（可已含 `?`，决定首个分隔符是 `?` 还是 `&`）；
+/// [params] 按键值对追加，值经 [urlEncode] 编码（Dart Map 保持插入序）。
+/// 用法：`urlBuild('reg/v4/', {'bench': 12, 'key': 'abc'})`
+/// → `reg/v4/?bench=12&key=abc`
+String urlBuild(String base, Map<String, Object?> params) {
+  var sep = base.contains('?') ? '&' : '?';
+  final b = StringBuffer(base);
+  params.forEach((key, value) {
+    b.write('$sep$key=${urlEncode(cs(value))}');
+    sep = '&';
+  });
+  return b.toString();
+}
 
 /// 生成指定范围内的随机数，对应 ThingBootSDK/Utils.h 的 `rand_num()`。
 int randNum(int begin, int end) {

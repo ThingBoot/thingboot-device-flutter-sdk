@@ -9,6 +9,53 @@ import 'dart:async';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
+import '../types.dart';
+import '../utils.dart';
+
+class _TbMqttRate {
+  int since = 0;
+  int count = 0;
+  int limit = 0;
+}
+
+/// 各 MQTT 主题独立的固定 60 秒窗口限频。
+class TbMqttRateLimiter {
+  final Map<SysTopic, _TbMqttRate> _rates = {
+    for (final topic in SysTopic.values)
+      if (topic != SysTopic.unknown) topic: _TbMqttRate()
+  };
+
+  void configure(dynamic rate) {
+    for (final entry in _rates.entries) {
+      final fallback = entry.key == SysTopic.debug ? 300 : 60;
+      final configured = rate is Map ? cn(rate[entry.key.name]) : 0;
+      entry.value
+        ..limit = configured > 0 ? configured : fallback
+        ..since = 0
+        ..count = 0;
+    }
+  }
+
+  bool allow(SysTopic topic, int nowMs) {
+    final rate = _rates[topic];
+    if (rate == null) return false;
+    if (rate.limit == 0) rate.limit = topic == SysTopic.debug ? 300 : 60;
+    final elapsed = nowMs >= rate.since
+        ? nowMs - rate.since
+        : 0xFFFFFFFF - rate.since + nowMs + 1;
+    if (rate.since == 0 || elapsed >= 60000) {
+      rate
+        ..since = nowMs
+        ..count = 0;
+    }
+    if (rate.count >= rate.limit) return false;
+    rate.count++;
+    return true;
+  }
+
+  int limitOf(SysTopic topic) => _rates[topic]?.limit ?? 0;
+}
+
 /// 收到的一条下行消息。
 class TbMqttMessage {
   /// 完整主题

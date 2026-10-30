@@ -19,8 +19,7 @@ class TbBridge {
       ERR_UNSUPPORTED;
 
   /// 配置并启动 SPI 桥接（不支持）。
-  int setupSpi(int sck, int miso, int mosi, int cs,
-          {int speed = 1000000}) =>
+  int setupSpi(int sck, int miso, int mosi, int cs, {int speed = 1000000}) =>
       ERR_UNSUPPORTED;
 
   /// 发送原始字节数据（不支持）。
@@ -42,8 +41,7 @@ class TbBridge {
   int handle() => ERR_UNSUPPORTED;
 
   /// 设置数据接收回调（不支持）。
-  int setOnReceive(void Function(List<int> data)? callback) =>
-      ERR_UNSUPPORTED;
+  int setOnReceive(void Function(List<int> data)? callback) => ERR_UNSUPPORTED;
 
   /// 设置错误回调（不支持）。
   int setOnError(void Function(int code)? callback) => ERR_UNSUPPORTED;

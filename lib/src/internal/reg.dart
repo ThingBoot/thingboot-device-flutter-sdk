@@ -28,9 +28,13 @@ class TbReg {
   /// 平台要求/失败后的重试延迟秒数，对应 REG.delay
   int delaySec = 0;
 
-  /// 内部 HTTP 请求，对应 common/system.h 的 `http_request()`（15s 超时，重试 1 次）。
-  Future<String> _request(String url, {String body = ''}) async {
-    for (var attempt = 0; attempt < 2; attempt++) {
+  /// 内部 HTTP 请求，对应 common/system.h 的 `http_request()`（15s 超时）。
+  ///
+  /// [tryTimes] 对应 IDF 版 `http_request(url, try_times)` 的重试次数：
+  /// 实际尝试 [tryTimes] + 1 次，每次间隔 1s。
+  Future<String> _request(String url,
+      {String body = '', int tryTimes = 1}) async {
+    for (var attempt = 0; attempt <= tryTimes; attempt++) {
       try {
         final uri = Uri.parse(url);
         final http.Response res;
@@ -48,7 +52,9 @@ class TbReg {
       } catch (_) {
         // 网络异常按失败处理，进入重试
       }
-      await Future.delayed(const Duration(seconds: 1));
+      if (attempt < tryTimes) {
+        await Future.delayed(const Duration(seconds: 1));
+      }
     }
     return '';
   }
@@ -56,7 +62,8 @@ class TbReg {
   /// 设备激活，对应 common/reg.h 的 `reg_active()`。
   ///
   /// 仅在设备凭证缺失（未预烧录/信息丢失）时调用；[mac] 必须使用稳定的
-  /// 设备唯一标识。成功返回响应的 data 对象，否则返回 null。
+  /// 设备唯一标识。激活码允许为空（免费产品由平台直接发放设备 ID）。
+  /// 成功返回响应的 data 对象，否则返回 null。
   Future<Map<String, dynamic>?> active({
     required String activeCode,
     required String productKey,
@@ -65,10 +72,17 @@ class TbReg {
     required int ts,
   }) async {
     final sign = tbMd5('$activeCode.$productKey.$mac.$productSecret.$ts');
-    final url = 'http://$kTbApiHost/active/'
-        '?code=$activeCode&product=$productKey&mac=$mac&sign=$sign&ts=$ts';
+    // url_build 对参数值统一 URL 编码，防特殊字符截断/注入（IDF 2026-10-20）
+    final url = urlBuild('http://$kTbApiHost/active/', {
+      'code': activeCode, // 激活码（由 setActiveCode 设置），允许为空
+      'product': productKey,
+      'mac': mac,
+      'sign': sign,
+      'ts': ts,
+    });
 
-    final res = await _request(url);
+    // 对应 reg_active() 的 http_request(url, 5)：重试 5 次
+    final res = await _request(url, tryTimes: 5);
     if (res.isEmpty) return null;
 
     Map<String, dynamic> ret;
@@ -102,28 +116,37 @@ class TbReg {
     required String board,
     required String mcu,
     required String firmware,
+    required String sdk,
     required String networkType,
     required bool needTime,
     required int ts,
   }) async {
     success = false;
 
-    var url = 'reg/v4/'
-        '?bench=$bench&product=$productKey&device=$deviceId'
-        '&key=$deviceKey&secret=$deviceSecret&mode=$mode';
+    // url_build 对参数值统一 URL 编码（IDF 2026-10-20）
+    var url = urlBuild('reg/v4/', {
+      'bench': bench,
+      'product': productKey,
+      'device': deviceId,
+      'key': deviceKey,
+      'secret': deviceSecret,
+      'mode': mode,
+    });
 
     // 未完成时间同步时顺便请求服务器时间（对应 reg.h 的 `&time`）
     if (needTime) url += '&time';
 
     final sign = tbMd5(
         '$bench.$productKey.$deviceId.$deviceKey.$deviceSecret.$productSecret.$ts');
-    url += '&sign=$sign&ts=$ts';
+    url = urlBuild(url, {'sign': sign, 'ts': ts});
 
     // 对应 reg.h 的 payload
     final payload = jsonEncode({
-      'board': board,
+      // 对应 reg.h：剥离 "$BOARD$" 占位前缀，后端据此查找 board
+      'board': board.replaceAll('\$BOARD\$', ''),
       'mcu': mcu,
       'firmware': firmware,
+      'sdk': sdk,
       'network_type': networkType,
     });
 
@@ -152,6 +175,48 @@ class TbReg {
       return null;
     }
 
+    if (data is! Map<String, dynamic>) return null;
+
+    server = cs(data['server']);
+    this.port = cn(data['port']);
+    client = cs(data['client']);
+
+    success = true;
+    return data;
+  }
+
+  /// 私有化注册（GET，无 payload），对应 common/reg.h reg_request() 的
+  /// 私有化分支。[url] 为已组好的相对路径（含签名）。
+  Future<Map<String, dynamic>?> requestPvt({
+    required String host,
+    required int port,
+    required String url,
+    required int ts,
+  }) async {
+    success = false;
+
+    final res = await _request('http://$host:$port/$url');
+    if (res.isEmpty) {
+      delaySec = 60;
+      return null;
+    }
+
+    Map<String, dynamic> ret;
+    try {
+      final v = jsonDecode(res);
+      if (v is! Map<String, dynamic>) return null;
+      ret = v;
+    } catch (_) {
+      return null;
+    }
+
+    final data = ret['data'];
+    if (cn(ret['code']) != 200) {
+      if (data is Map<String, dynamic> && data.containsKey('delay')) {
+        delaySec = cn(data['delay']);
+      }
+      return null;
+    }
     if (data is! Map<String, dynamic>) return null;
 
     server = cs(data['server']);

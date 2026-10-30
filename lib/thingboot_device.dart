@@ -1,6 +1,6 @@
 /// 芯步设备 SDK（ThingBoot Device SDK）Flutter 移植版。
 ///
-/// 对外接口与 ESP Arduino 版（thingboot-device-esp-arduino-sdk）高度一致：
+/// 对外接口以 ESP-IDF SDK 为唯一基准：
 ///
 /// ```dart
 /// import 'package:thingboot_device/thingboot_device.dart';
@@ -31,3 +31,4 @@ export 'src/peripheral.dart';
 export 'src/network.dart';
 export 'src/gateway.dart';
 export 'src/bridge.dart';
+export 'src/api.dart';

@@ -49,8 +49,8 @@ class TbTimer {
 
       // 复用槽位时先取消旧的 Timer
       t.timer?.cancel();
-      t.timer = Timer.periodic(
-          Duration(milliseconds: intervalMs), (_) => _tick(t));
+      t.timer =
+          Timer.periodic(Duration(milliseconds: intervalMs), (_) => _tick(t));
 
       return ERR_OK;
     }

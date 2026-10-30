@@ -1,10 +1,11 @@
 /// 协议纯函数：主题拼接、payload 封装/解析、mid 生成。
 ///
-/// 严格对应 Arduino 版 common/mqtt.h 与 common/system.h，全部无副作用，可单测。
+/// 以 IDF common/mqtt.h 与 common/system.h 为基准，纯函数可单测。
 library;
 
 import 'dart:convert';
 
+import '../native_core.dart';
 import '../types.dart';
 import '../utils.dart';
 
@@ -32,14 +33,41 @@ String sysTopicName(SysTopic topic) {
   }
 }
 
-/// 拼接完整 MQTT 主题（平台模式），对应 common/mqtt.h 的 `mqtt_topic()`：
-/// `thing/{PRODUCT.key}/{SYS.key}/{topic}/{side}`。
+/// 拼接完整 MQTT 主题，对应 common/mqtt.h 的 `mqtt_topic()`：
+/// 平台模式 `thing/{PRODUCT.key}/{SYS.key}/{topic}/{side}`。
 ///
-/// [side] 上行固定为 `client`，下行订阅固定为 `server`。
+/// 私有化 broker（pvt_* 参数由调用方在 broker 启用时传入）：
+/// - azure：`devices/{client}/messages/events/sys_topic={name}`（上行），
+///   `devices/{client}/messages/devicebound/#`（下行订阅）
+/// - pvtTopic == 'key' / 'client'：前缀换为 `thing/{pk}/{pvtKey|pvtClient}`
+/// - pvtTopic 其他非空串：原样作为前缀
+/// - pvtTopic 空：与平台模式一致
 String mqttTopic(
-    String productKey, String deviceKey, SysTopic topic, String side) {
-  final pre = 'thing/$productKey/$deviceKey';
+    String productKey, String deviceKey, SysTopic topic, String side,
+    {String pvtTopic = '',
+    String pvtClient = '',
+    String pvtKey = '',
+    bool azure = false}) {
+  if (TbNativeCore.isSupported) {
+    return TbNativeCore.instance.mqttTopic(
+        productKey, deviceKey, topic.index, side,
+        pvtTopic: pvtTopic, pvtClient: pvtClient, pvtKey: pvtKey, azure: azure);
+  }
   final name = sysTopicName(topic);
+  if (azure) {
+    if (side == 'server') {
+      return 'devices/$pvtClient/messages/devicebound/#';
+    }
+    return 'devices/$pvtClient/messages/events/sys_topic=$name';
+  }
+  var pre = 'thing/$productKey/$deviceKey';
+  if (pvtTopic == 'key') {
+    pre = 'thing/$productKey/$pvtKey';
+  } else if (pvtTopic == 'client') {
+    pre = 'thing/$productKey/$pvtClient';
+  } else if (pvtTopic.isNotEmpty) {
+    pre = pvtTopic;
+  }
   if (name.isEmpty) return '$pre/$side';
   return '$pre/$name/$side';
 }
@@ -55,6 +83,9 @@ String sysMessage({
   int device = 0,
   required int ts,
 }) {
+  if (TbNativeCore.isSupported) {
+    return TbNativeCore.instance.sysMessage(mid, data, device, ts);
+  }
   final b = StringBuffer('{');
   if (device > 0) b.write('"device":$device,');
   b.write('"mid":"$mid"');

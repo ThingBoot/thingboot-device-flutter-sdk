@@ -98,5 +98,16 @@ const int ERR_BRIDGE_PROTOCOL_INVALID = 21002;
 const int ERR_BRIDGE_SEND_FAILED = 21003;
 const int ERR_BRIDGE_PARAM_INVALID = 21004;
 
+/* ============================================================
+ *  云平台代发 HTTP（22xxx）
+ * ============================================================ */
+const int ERR_API_OK = 0;
+const int ERR_API_BUSY = 22001;
+const int ERR_API_INVALID = 22002;
+const int ERR_API_TIMEOUT = 22003;
+const int ERR_API_SUBSCRIBE = 22004;
+const int ERR_API_PUBLISH = 22005;
+const int ERR_API_TOO_LARGE = 22006;
+
 /// Dart 版新增：当前平台不支持该功能（Arduino 版无此码）。
 const int ERR_UNSUPPORTED = 90001;

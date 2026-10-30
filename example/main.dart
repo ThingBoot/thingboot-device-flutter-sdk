@@ -32,9 +32,9 @@ Future<void> main() async {
   // https://www.thingboot.com/developer/center/access/
   device.setActiveCode('xxxxxxxxxxxxx');
 
-  // 设备配置
-  device.config.addConfig('relay', 0, 1);
-  device.config.addConfig('btn_action', 1, 3);
+  // 设备配置（pos 缺省为 SDK 托管；显式 pos/length 仍兼容）
+  device.config.addConfig('relay');
+  device.config.addConfig('btn_action', pos: 1, length: 3);
 
   // 设置命令回调函数（首参为消息 ID mid，应答时原样传回）
   device.order.onOrder((mid, data) {

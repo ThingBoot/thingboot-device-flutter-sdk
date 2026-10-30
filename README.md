@@ -1,6 +1,6 @@
 <h1 align="center">芯步设备 SDK · Flutter 版</h1>
 <p align="center">ThingBoot Device SDK for Flutter</p>
-<p align="center"><b>ESP Arduino 版 SDK 的 Flutter 移植 —— 接口高度一致，协议完全一致</b></p>
+<p align="center"><b>以 ESP-IDF SDK 为唯一基准 —— Dart API 稳定，原生协议核心闭源分发</b></p>
 
 ---
 
@@ -13,19 +13,29 @@
 
 ## 特性
 
-- **协议完全一致**：主题拼接、消息封装、注册签名、mid 生成均与 Arduino 版逐字节对齐
-- **接口高度一致**：`setProduct` / `onOrder` / `replyMessage` / `reportEvent` / `reportState` / `addConfig` / `addTimer` 等方法名与语义照搬 Arduino 版
+- **协议以 IDF 为唯一基准**：主题拼接、消息封装、注册签名、mid 生成均与 ESP-IDF 版对齐
+- **公开 API 稳定**：`setProduct` / `onOrder` / `replyMessage` / `reportEvent` / `reportState` / `addConfig` / `addTimer` 等接口保持现有语义
+- **闭源原生核心**：Windows 的 MD5、URL、MQTT topic 与 `sys_message` 已由 C++ 静态核心提供，发布包不含核心源码
 - **平台直连**：HTTP 激活 → reg/v4 注册 → MQTT 连接订阅（QoS 1），自动断线重连（5~60s 随机退避）
-- **纯 Dart 事件循环**：无需 `loop()`，`setup()` 后 SDK 以 Timer 自驱动
+- **云代发 API**：`device.api` 支持异步 HTTP 请求、同 mid 应答与超时处理
+- **私有化接入**：HTTP / WebSocket / TCP 单端口服务、LAN 发现与外置网关上行的 Flutter 实现
+- **Dart 事件循环**：无需 `loop()`，`setup()` 后 SDK 以 Timer 自驱动
 
-## 与 Arduino 版的关系
+## 与 ESP-IDF 版的关系
 
-| | Arduino 版 | Flutter 版 |
+| | ESP-IDF 版 | Flutter 版 |
 |---|---|---|
-| 平台 | ESP8266 / ESP32 | Flutter（Android / iOS / 桌面） |
-| 协议 | thing/{产品}/{设备}/… MQTT + HTTP 注册 | 完全相同 |
+| 平台 | ESP32 系列 | Flutter（Android / iOS / 桌面） |
+| 协议 | thing/{产品}/{设备}/… MQTT + HTTP 注册 | 以 IDF 为唯一基准 |
+| 纯协议核心 | C++ 源码基准 | 分平台闭源二进制 + Dart FFI 薄包装 |
 | 外设 / WiFi / 以太网 / GSM / 网关 / 桥接 | 支持 | 桩（返回 `ERR_UNSUPPORTED`） |
 | 主循环 | 需在 `loop()` 中调用 `device.loop()` | 不需要（Dart 事件循环） |
+
+### 分阶段平台支持
+
+- **Windows x64**：第一阶段原生核心已接入；SDK 自带 FFI 插件、Debug/Release 静态库和 CMake 配置，使用方无需修改 runner。
+- **Android / macOS / iOS**：对应原生阶段完成前，显式保留同语义的 Dart 纯逻辑实现，现有功能不因 Windows 改造而退化。
+- 原生库加载失败或 ABI 不匹配会显式报错，不会静默切换实现。Web 不支持。
 
 ## 安装
 
@@ -44,8 +54,12 @@ dependencies:
 
 ```yaml
 dependencies:
-  thingboot_device: ^0.1.0
+  thingboot_device: ^0.2.0
 ```
+
+Windows 首次升级或切换本 SDK 版本后，请重新执行 `flutter pub get` 和干净构建，让 FFI 插件注册及原生链接配置重新生成。最终构建目录应包含 `thingboot_device.dll`，其核心来自静态 `.lib`，不需要额外分发 `.lib` 文件。
+
+SDK 开发者修改 `native/` 后，先运行 `python tool/build_native_windows.py` 重建 Debug/Release 静态库和测试 DLL，再执行测试与 `python release.py --no-git`。发布脚本会拒绝缺失或陈旧的原生库。
 
 ## 快速开始
 
