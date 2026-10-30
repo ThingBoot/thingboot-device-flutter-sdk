@@ -1,6 +1,6 @@
 name: thingboot_device
 description: 芯步设备 Flutter SDK，通过统一 Dart API 将应用接入芯步平台，支持设备激活、MQTT 通信、配置管理、事件上报与私有化接入。
-version: 0.4.0
+version: 0.5.0
 repository: https://github.com/ThingBoot/thingboot-device-flutter-sdk
 issue_tracker: https://github.com/ThingBoot/thingboot-device-flutter-sdk/issues
 
@@ -30,4 +30,6 @@ flutter:
       android:
         ffiPlugin: true
       macos:
+        ffiPlugin: true
+      ios:
         ffiPlugin: true
