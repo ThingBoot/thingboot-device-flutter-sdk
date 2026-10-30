@@ -32,7 +32,7 @@ import 'package:http/http.dart' as http;
 
 /// SDK 类型与版本号，对应 ThingBootSDK/Types.h 的名称和版本宏。
 const String kThingBootSdkName = 'flutter';
-const String kThingBootSdkVersion = '0.2.1';
+const String kThingBootSdkVersion = '0.3.0';
 const String kThingBootSdk = '$kThingBootSdkName $kThingBootSdkVersion';
 
 /// 芯步设备主类。

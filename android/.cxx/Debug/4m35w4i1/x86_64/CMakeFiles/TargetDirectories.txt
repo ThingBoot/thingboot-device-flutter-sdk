@@ -1,0 +1,3 @@
+E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/Debug/4m35w4i1/x86_64/CMakeFiles/thingboot_device.dir
+E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/Debug/4m35w4i1/x86_64/CMakeFiles/edit_cache.dir
+E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/Debug/4m35w4i1/x86_64/CMakeFiles/rebuild_cache.dir

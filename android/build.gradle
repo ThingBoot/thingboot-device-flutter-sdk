@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace = 'com.thingboot.thingboot_device'
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    defaultConfig {
+        minSdk = flutter.minSdkVersion
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}

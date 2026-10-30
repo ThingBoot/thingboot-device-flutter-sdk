@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:ffi/ffi.dart';
 
 class TbNativeCore {
-  static final bool isSupported = Platform.isWindows;
+  static final bool isSupported = Platform.isWindows || Platform.isAndroid;
   static final TbNativeCore instance = TbNativeCore._();
 
   TbNativeCore._() {
@@ -72,8 +72,11 @@ class TbNativeCore {
       }
       return DynamicLibrary.open('thingboot_device.dll');
     }
+    if (Platform.isAndroid) {
+      return DynamicLibrary.open('libthingboot_device.so');
+    }
     throw UnsupportedError(
-        'ThingBoot native core is currently available on Windows only');
+        'ThingBoot native core is currently available on Windows and Android');
   }
 
   String md5(String data, int outputLength) {

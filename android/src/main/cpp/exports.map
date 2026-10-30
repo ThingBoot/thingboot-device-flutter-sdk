@@ -1,0 +1,11 @@
+THINGBOOT_DEVICE_1.0 {
+  global:
+    tb_native_abi_version;
+    tb_md5;
+    tb_url_encode;
+    tb_mqtt_topic;
+    tb_sys_message;
+    thingboot_device_plugin_anchor;
+  local:
+    *;
+};

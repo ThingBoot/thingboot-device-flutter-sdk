@@ -1,0 +1,1 @@
+E:\iot\firmware\sdk\thingboot-device-flutter-sdk\build\native\android_smoke\build\thingboot_device\intermediates\cxx\Debug\4m35w4i1\obj\arm64-v8a
