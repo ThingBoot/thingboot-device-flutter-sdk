@@ -1,4 +1,0 @@
-# ninja log v5
-1	37	8150625919519487	CMakeFiles/thingboot_device.dir/src/main/cpp/thingboot_device.cpp.o	f9a0a1263d45afe4
-37	126	8150625920309480	E:/iot/firmware/sdk/thingboot-device-flutter-sdk/build/native/android_smoke/build/thingboot_device/intermediates/cxx/Debug/4m35w4i1/obj/x86_64/libthingboot_device.so	b0a0f962838bc64b
-0	88	8150627878579619	E:/iot/firmware/sdk/thingboot-device-flutter-sdk/build/native/android_smoke/build/thingboot_device/intermediates/cxx/Debug/4m35w4i1/obj/x86_64/libthingboot_device.so	49995d71a8b0102d

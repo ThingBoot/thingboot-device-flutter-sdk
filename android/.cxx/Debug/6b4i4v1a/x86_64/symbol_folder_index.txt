@@ -1,1 +1,0 @@
-E:\iot\product\SuperScreen\build\thingboot_device\intermediates\cxx\Debug\6b4i4v1a\obj\x86_64

@@ -41,7 +41,7 @@ dependencies:
 
 ```yaml
 dependencies:
-  thingboot_device: ^0.5.0
+  thingboot_device: ^0.5.1
 ```
 
 安装或升级后执行：

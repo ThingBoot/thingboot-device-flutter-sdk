@@ -1,3 +1,0 @@
-E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/RelWithDebInfo/2c71i451/armeabi-v7a/CMakeFiles/thingboot_device.dir
-E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/RelWithDebInfo/2c71i451/armeabi-v7a/CMakeFiles/edit_cache.dir
-E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/RelWithDebInfo/2c71i451/armeabi-v7a/CMakeFiles/rebuild_cache.dir

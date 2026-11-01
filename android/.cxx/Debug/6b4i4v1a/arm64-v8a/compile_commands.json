@@ -1,7 +1,0 @@
-[
-{
-  "directory": "E:/iot/firmware/sdk/thingboot-device-flutter-sdk/android/.cxx/Debug/6b4i4v1a/arm64-v8a",
-  "command": "E:\\Android\\Sdk\\ndk\\28.2.13676358\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=aarch64-none-linux-android24 --sysroot=E:/Android/Sdk/ndk/28.2.13676358/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dthingboot_device_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -fno-limit-debug-info  -fPIC -o CMakeFiles\\thingboot_device.dir\\src\\main\\cpp\\thingboot_device.cpp.o -c E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\src\\main\\cpp\\thingboot_device.cpp",
-  "file": "E:\\iot\\firmware\\sdk\\thingboot-device-flutter-sdk\\android\\src\\main\\cpp\\thingboot_device.cpp"
-}
-]
